@@ -129,6 +129,7 @@
         }
 
         .subtitle {
+            font-family: Arial;
             position: absolute;
             width: 92%;
             left: 50%;
@@ -348,7 +349,7 @@ function generateFFmpegStyle() {
     const opacityHex = Math.round(els.bgOpacity.value * 255).toString(16).padStart(2, '0').toUpperCase();
 
     const style = [
-        "FontName=Arial",
+        "FontName=Arial Bold",
         `FontSize=${els.fontSize.value}`,
         `PrimaryColour=&H${textColor}&`,
         `OutlineColour=&H${bgColor}&`,
