@@ -1,27 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-P326N9MEBP"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-P326N9MEBP');
     </script>
+
     <meta charset="UTF-8">
+    <meta name="author" content="FFmpeg Subtitle Style Generator Team">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://ffmpeg-subtitle-simulator.vercel.app/">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Generate and visualize FFmpeg subtitle styles online. Free subtitle visualizer and checker for SRT files and video text styling.">
-    <meta name="keywords" content="ffmpeg, subtitle visualizer, subtitle checker, subtitle style generator, srt visualizer, srt style editor, subtitle preview, video captions, ffmpeg subtitles online, subtitle simulator, captions styling">
-    <meta property="og:title" content="FFmpeg Subtitle Style Generator">
-    <meta property="og:description" content="Visualize and copy FFmpeg subtitle styles online. Free tool for checking your SRT styling in 16:9 and 9:16 formats.">
+    <meta name="description" content="Generate and preview FFmpeg subtitle styles online. Visualize your SRT captions in real time for 16:9 and 9:16 videos. Free subtitle style checker and visualizer.">
+    <meta name="keywords" content="ffmpeg, subtitle visualizer, subtitle checker, subtitle style generator, srt visualizer, srt style editor, subtitle preview, video captions, ffmpeg subtitles online, subtitle simulator, captions styling, subtitle creator, subtitle designer">
+    <meta property="og:title" content="FFmpeg Subtitle Style Generator – Online Visualizer & Checker">
+    <meta property="og:description" content="Visualize and copy FFmpeg subtitle styles online. Preview how your captions will look in vertical and horizontal video formats.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="./logo.png">
+    <meta property="og:url" content="https://ffmpeg-subtitle-simulator.vercel.app/">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="FFmpeg Subtitle Style Generator – Online Visualizer & Checker">
+    <meta name="twitter:description" content="Generate and simulate FFmpeg subtitle styles in real time for any video format.">
+    <meta name="twitter:image" content="https://ffmpeg-subtitle-simulator.vercel.app/logo.png">
     <meta name="google-adsense-account" content="ca-pub-4831050341683129">
     <link rel="icon" type="image/vnd.icon" href="./favicon.ico">
     <title>FFmpeg Subtitle Style Generator – Online Visualizer & Checker</title>
 
+    <!-- Google Ads -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4831050341683129"
             crossorigin="anonymous"></script>
 
@@ -88,10 +97,7 @@
             gap: 0.4rem;
         }
 
-        input[type="text"],
-        input[type="number"],
-        input[type="color"],
-        input[type="range"] {
+        input, select {
             width: 100%;
             background: #111;
             border: 1px solid #333;
@@ -190,14 +196,14 @@
 <body>
 
 <header>
-    <div class="logo"><img src="./logo.png" height="100%" width="100%" style="max-height: 100px; max-width: 100%;" /></div>
+    <div class="logo"><img src="./logo.png" alt="FFmpeg Subtitle Logo" style="max-height: 100px; max-width: 100%;" /></div>
     <div class="logo">FFmpeg Subtitle Style Generator</div>
-    <h2>Online subtitle visualizer & style checker for SRT and FFmpeg overlays</h2>
+    <h2>Preview & generate your subtitle styles in real time</h2>
 </header>
 
 <div class="controls">
     <label>Text
-        <input id="subtitleText" type="text" value="Freddy Rose West hid unimaginable horrors at 25 Cromwell Street.">
+        <input id="subtitleText" type="text" value="This is a sample subtitle text for testing styles.">
     </label>
     <label>Font size
         <input id="fontSize" type="number" min="8" max="64" value="22">
@@ -213,6 +219,27 @@
     </label>
     <label>Bold
         <input id="bold" type="checkbox" checked>
+    </label>
+    <label>Italic
+        <input id="italic" type="checkbox">
+    </label>
+    <label>Outline (stroke)
+        <input id="outline" type="range" min="0" max="10" value="3">
+    </label>
+    <label>Shadow
+        <input id="shadow" type="range" min="0" max="10" value="2">
+    </label>
+    <label>Alignment
+        <select id="alignment">
+            <option value="1">Bottom Left</option>
+            <option value="2" selected>Bottom Center</option>
+            <option value="3">Bottom Right</option>
+            <option value="5">Middle Left</option>
+            <option value="6">Middle Center</option>
+            <option value="7">Top Left</option>
+            <option value="8">Top Center</option>
+            <option value="9">Top Right</option>
+        </select>
     </label>
     <label>Padding (vertical)
         <input id="padding" type="range" min="0" max="30" value="10">
@@ -246,97 +273,122 @@
 <footer>© 2025 FFmpeg Subtitle Style Generator | Free online subtitle visualizer & checker</footer>
 
 <script>
-    const els = {
-        text: document.getElementById('subtitleText'),
-        fontSize: document.getElementById('fontSize'),
-        textColor: document.getElementById('textColor'),
-        bgColor: document.getElementById('bgColor'),
-        bgOpacity: document.getElementById('bgOpacity'),
-        bold: document.getElementById('bold'),
-        padding: document.getElementById('padding'),
-        marginV: document.getElementById('marginV'),
-        radius: document.getElementById('radius')
+const els = {
+    text: document.getElementById('subtitleText'),
+    fontSize: document.getElementById('fontSize'),
+    textColor: document.getElementById('textColor'),
+    bgColor: document.getElementById('bgColor'),
+    bgOpacity: document.getElementById('bgOpacity'),
+    bold: document.getElementById('bold'),
+    italic: document.getElementById('italic'),
+    padding: document.getElementById('padding'),
+    marginV: document.getElementById('marginV'),
+    radius: document.getElementById('radius'),
+    outline: document.getElementById('outline'),
+    shadow: document.getElementById('shadow'),
+    alignment: document.getElementById('alignment')
+};
+
+const portraitSubtitle = document.getElementById('subtitlePortrait');
+const landscapeSubtitle = document.getElementById('subtitleLandscape');
+const ffmpegOutput = document.getElementById('ffmpegOutput');
+const copyBtn = document.getElementById('copyFFmpeg');
+const downloadBtn = document.getElementById('downloadConfig');
+
+function rgbToAss(hex) {
+    const bigint = parseInt(hex.replace('#', ''), 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return `${b.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${r.toString(16).padStart(2, '0')}`.toUpperCase();
+}
+
+function updateSubtitles() {
+    const bgRGBA = hexToRgba(els.bgColor.value, parseFloat(els.bgOpacity.value));
+    const style = {
+        color: els.textColor.value,
+        backgroundColor: bgRGBA,
+        fontSize: els.fontSize.value + 'px',
+        fontWeight: els.bold.checked ? 'bold' : 'normal',
+        fontStyle: els.italic.checked ? 'italic' : 'normal',
+        padding: els.padding.value + 'px',
+        bottom: els.marginV.value + 'px',
+        borderRadius: els.radius.value + 'px',
+        textAlign: 'center',
+        textShadow: `0px ${els.shadow.value}px ${els.shadow.value * 1.2}px rgba(0,0,0,0.8)`,
+        WebkitTextStroke: `${els.outline.value / 2}px black`
     };
 
-    const portraitSubtitle = document.getElementById('subtitlePortrait');
-    const landscapeSubtitle = document.getElementById('subtitleLandscape');
-    const ffmpegOutput = document.getElementById('ffmpegOutput');
-    const copyBtn = document.getElementById('copyFFmpeg');
-    const downloadBtn = document.getElementById('downloadConfig');
+    portraitSubtitle.textContent = els.text.value;
+    landscapeSubtitle.textContent = els.text.value;
 
-    function rgbToAss(hex) {
-        const bigint = parseInt(hex.replace('#', ''), 16);
-        const r = (bigint >> 16) & 255;
-        const g = (bigint >> 8) & 255;
-        const b = bigint & 255;
-        return `${b.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${r.toString(16).padStart(2, '0')}`.toUpperCase();
-    }
+    [portraitSubtitle, landscapeSubtitle].forEach(el => {
+        Object.assign(el.style, style);
+        el.style.top = '';
+        el.style.transform = 'translateX(-50%)';
 
-    function updateSubtitles() {
-        const bgRGBA = hexToRgba(els.bgColor.value, parseFloat(els.bgOpacity.value));
-        const style = {
-            color: els.textColor.value,
-            backgroundColor: bgRGBA,
-            fontSize: els.fontSize.value + 'px',
-            fontWeight: els.bold.checked ? 'bold' : 'normal',
-            padding: els.padding.value + 'px',
-            bottom: els.marginV.value + 'px',
-            borderRadius: els.radius.value + 'px',
-            textAlign: 'center',
-        };
-        portraitSubtitle.textContent = els.text.value;
-        landscapeSubtitle.textContent = els.text.value;
-        [portraitSubtitle, landscapeSubtitle].forEach(el => Object.assign(el.style, style));
-        generateFFmpegStyle();
-    }
-
-    function generateFFmpegStyle() {
-        const textColor = rgbToAss(els.textColor.value);
-        const bgColor = rgbToAss(els.bgColor.value);
-        const opacityHex = Math.round(els.bgOpacity.value * 255).toString(16).padStart(2, '0').toUpperCase();
-
-        const style = [
-            "FontName=Arial Bold",
-            `FontSize=${els.fontSize.value}`,
-            `PrimaryColour=&H${textColor}&`,
-            `OutlineColour=&H${bgColor}&`,
-            `BackColour=&H${opacityHex}${bgColor}&`,
-            `Bold=${els.bold.checked ? 1 : 0}`,
-            "Italic=0",
-            "BorderStyle=3",
-            "Outline=3",
-            "Shadow=2",
-            `MarginV=${els.marginV.value}`,
-            "Alignment=2"
-        ].join(',');
-
-        ffmpegOutput.textContent = `ffmpeg -i input.mp4 -vf "subtitles='subs.srt':force_style='${style}'" -c:a copy output.mp4`;
-    }
-
-    function hexToRgba(hex, opacity) {
-        const bigint = parseInt(hex.replace('#', ''), 16);
-        const r = (bigint >> 16) & 255;
-        const g = (bigint >> 8) & 255;
-        const b = bigint & 255;
-        return `rgba(${r},${g},${b},${opacity})`;
-    }
-
-    copyBtn.addEventListener('click', () => {
-        navigator.clipboard.writeText(ffmpegOutput.textContent);
-        copyBtn.textContent = "✅ Copied!";
-        setTimeout(() => copyBtn.textContent = "📋 Copy FFmpeg Command", 2000);
+        switch (parseInt(els.alignment.value)) {
+            case 1: el.style.bottom = els.marginV.value + 'px'; el.style.textAlign = 'left'; break;
+            case 2: el.style.bottom = els.marginV.value + 'px'; el.style.textAlign = 'center'; break;
+            case 3: el.style.bottom = els.marginV.value + 'px'; el.style.textAlign = 'right'; break;
+            case 5: el.style.top = '50%'; el.style.transform = 'translate(-50%, -50%)'; el.style.textAlign = 'left'; break;
+            case 6: el.style.top = '50%'; el.style.transform = 'translate(-50%, -50%)'; el.style.textAlign = 'center'; break;
+            case 7: el.style.top = '20px'; el.style.textAlign = 'left'; break;
+            case 8: el.style.top = '20px'; el.style.textAlign = 'center'; break;
+            case 9: el.style.top = '20px'; el.style.textAlign = 'right'; break;
+        }
     });
 
-    downloadBtn.addEventListener('click', () => {
-        const blob = new Blob([ffmpegOutput.textContent], { type: "text/plain" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "ffmpeg_subtitle_style.txt";
-        link.click();
-    });
+    generateFFmpegStyle();
+}
 
-    Object.values(els).forEach(el => el.addEventListener('input', updateSubtitles));
-    updateSubtitles();
+function generateFFmpegStyle() {
+    const textColor = rgbToAss(els.textColor.value);
+    const bgColor = rgbToAss(els.bgColor.value);
+    const opacityHex = Math.round(els.bgOpacity.value * 255).toString(16).padStart(2, '0').toUpperCase();
+
+    const style = [
+        "FontName=Arial",
+        `FontSize=${els.fontSize.value}`,
+        `PrimaryColour=&H${textColor}&`,
+        `OutlineColour=&H${bgColor}&`,
+        `BackColour=&H${opacityHex}${bgColor}&`,
+        `Bold=${els.bold.checked ? 1 : 0}`,
+        `Italic=${els.italic.checked ? 1 : 0}`,
+        `BorderStyle=3`,
+        `Outline=${els.outline.value}`,
+        `Shadow=${els.shadow.value}`,
+        `MarginV=${els.marginV.value}`,
+        `Alignment=${els.alignment.value}`
+    ].join(',');
+
+    ffmpegOutput.textContent = `ffmpeg -i input.mp4 -vf "subtitles='YOUR_SUBS_FILE.srt':force_style='${style}'" -c:a copy output.mp4`;
+}
+
+function hexToRgba(hex, opacity) {
+    const bigint = parseInt(hex.replace('#', ''), 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return `rgba(${r},${g},${b},${opacity})`;
+}
+
+copyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(ffmpegOutput.textContent);
+    copyBtn.textContent = "✅ Copied!";
+    setTimeout(() => copyBtn.textContent = "📋 Copy FFmpeg Command", 2000);
+});
+
+downloadBtn.addEventListener('click', () => {
+    const blob = new Blob([ffmpegOutput.textContent], { type: "text/plain" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "ffmpeg_subtitle_style.txt";
+    link.click();
+});
+
+Object.values(els).forEach(el => el.addEventListener('input', updateSubtitles));
+updateSubtitles();
 </script>
 </body>
 </html>
