@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Generate and visualize FFmpeg subtitle styles online. Free subtitle visualizer and checker for SRT files and video text styling.">
+    <meta name="keywords" content="ffmpeg, subtitle visualizer, subtitle checker, subtitle style generator, srt visualizer, srt style editor, subtitle preview, video captions, ffmpeg subtitles online, subtitle simulator, captions styling">
+    <meta property="og:title" content="FFmpeg Subtitle Style Generator">
+    <meta property="og:description" content="Visualize and copy FFmpeg subtitle styles online. Free tool for checking your SRT styling in 16:9 and 9:16 formats.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="./logo.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/vnd.icon" href="./favicon.ico">
+    <title>FFmpeg Subtitle Style Generator – Online Visualizer & Checker</title>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXX"
+            crossorigin="anonymous"></script>
+
+    <style>
+        :root {
+            --bg-dark: #0e0e0e;
+            --panel-bg: #1b1b1b;
+            --text-main: #eee;
+            --accent: #00c896;
+            --accent-hover: #00a37a;
+            --border: #333;
+        }
+
+        body {
+            font-family: "Inter", Arial, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            text-align: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--accent);
+            letter-spacing: 0.5px;
+        }
+
+        h2 {
+            font-weight: 400;
+            color: #bbb;
+            margin-top: 0;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            background: var(--panel-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        label {
+            display: flex;
+            flex-direction: column;
+            font-size: 0.85rem;
+            color: #ccc;
+            gap: 0.4rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="color"],
+        input[type="range"] {
+            width: 100%;
+            background: #111;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 4px;
+            padding: 0.3rem 0.4rem;
+        }
+
+        .subtitle-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .video-box {
+            position: relative;
+            background: #000;
+            overflow: hidden;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+
+        .video-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+        }
+
+        .subtitle {
+            position: absolute;
+            width: 92%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            white-space: pre-wrap;
+            border-radius: 2px;
+            color: #fff;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 0.8rem 1.4rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--accent-hover);
+        }
+
+        pre {
+            background: var(--panel-bg);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 900px;
+            overflow-x: auto;
+            color: #00ff99;
+            font-family: "Consolas", monospace;
+            font-size: 0.9rem;
+            border: 1px solid #333;
+        }
+
+        footer {
+            color: #666;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.4rem;
+            }
+            .subtitle-preview {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo"><img src="./logo.png" height="100%" width="100%" style="max-height: 100px; max-width: 100%;" /></div>
+    <div class="logo">FFmpeg Subtitle Style Generator</div>
+    <h2>Online subtitle visualizer & style checker for SRT and FFmpeg overlays</h2>
+</header>
+
+<div class="controls">
+    <label>Text
+        <input id="subtitleText" type="text" value="Freddy Rose West hid unimaginable horrors at 25 Cromwell Street.">
+    </label>
+    <label>Font size
+        <input id="fontSize" type="number" min="8" max="64" value="22">
+    </label>
+    <label>Text color
+        <input id="textColor" type="color" value="#FFFFFF">
+    </label>
+    <label>Background color
+        <input id="bgColor" type="color" value="#000000">
+    </label>
+    <label>Background opacity
+        <input id="bgOpacity" type="range" min="0" max="1" step="0.05" value="0.9">
+    </label>
+    <label>Bold
+        <input id="bold" type="checkbox" checked>
+    </label>
+    <label>Padding (vertical)
+        <input id="padding" type="range" min="0" max="30" value="10">
+    </label>
+    <label>MarginV
+        <input id="marginV" type="range" min="0" max="200" value="80">
+    </label>
+    <label>Border radius
+        <input id="radius" type="range" min="0" max="10" value="2">
+    </label>
+</div>
+
+<div class="subtitle-preview">
+    <div class="video-box" style="width:270px; height:480px;">
+        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&h=700&fit=crop" alt="portrait preview">
+        <div class="subtitle" id="subtitlePortrait"></div>
+    </div>
+    <div class="video-box" style="width:480px; height:270px;">
+        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=450&fit=crop" alt="landscape preview">
+        <div class="subtitle" id="subtitleLandscape"></div>
+    </div>
+</div>
+
+<div class="actions">
+    <button class="btn" id="copyFFmpeg">📋 Copy FFmpeg Command</button>
+    <button class="btn" id="downloadConfig">⬇️ Download Config</button>
+</div>
+
+<pre id="ffmpegOutput"></pre>
+
+<footer>© 2025 FFmpeg Subtitle Style Generator | Free online subtitle visualizer & checker</footer>
+
+<script>
+    const els = {
+        text: document.getElementById('subtitleText'),
+        fontSize: document.getElementById('fontSize'),
+        textColor: document.getElementById('textColor'),
+        bgColor: document.getElementById('bgColor'),
+        bgOpacity: document.getElementById('bgOpacity'),
+        bold: document.getElementById('bold'),
+        padding: document.getElementById('padding'),
+        marginV: document.getElementById('marginV'),
+        radius: document.getElementById('radius')
+    };
+
+    const portraitSubtitle = document.getElementById('subtitlePortrait');
+    const landscapeSubtitle = document.getElementById('subtitleLandscape');
+    const ffmpegOutput = document.getElementById('ffmpegOutput');
+    const copyBtn = document.getElementById('copyFFmpeg');
+    const downloadBtn = document.getElementById('downloadConfig');
+
+    function rgbToAss(hex) {
+        const bigint = parseInt(hex.replace('#', ''), 16);
+        const r = (bigint >> 16) & 255;
+        const g = (bigint >> 8) & 255;
+        const b = bigint & 255;
+        return `${b.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${r.toString(16).padStart(2, '0')}`.toUpperCase();
+    }
+
+    function updateSubtitles() {
+        const bgRGBA = hexToRgba(els.bgColor.value, parseFloat(els.bgOpacity.value));
+        const style = {
+            color: els.textColor.value,
+            backgroundColor: bgRGBA,
+            fontSize: els.fontSize.value + 'px',
+            fontWeight: els.bold.checked ? 'bold' : 'normal',
+            padding: els.padding.value + 'px',
+            bottom: els.marginV.value + 'px',
+            borderRadius: els.radius.value + 'px',
+            textAlign: 'center',
+        };
+        portraitSubtitle.textContent = els.text.value;
+        landscapeSubtitle.textContent = els.text.value;
+        [portraitSubtitle, landscapeSubtitle].forEach(el => Object.assign(el.style, style));
+        generateFFmpegStyle();
+    }
+
+    function generateFFmpegStyle() {
+        const textColor = rgbToAss(els.textColor.value);
+        const bgColor = rgbToAss(els.bgColor.value);
+        const opacityHex = Math.round(els.bgOpacity.value * 255).toString(16).padStart(2, '0').toUpperCase();
+
+        const style = [
+            "FontName=Arial Bold",
+            `FontSize=${els.fontSize.value}`,
+            `PrimaryColour=&H${textColor}&`,
+            `OutlineColour=&H${bgColor}&`,
+            `BackColour=&H${opacityHex}${bgColor}&`,
+            `Bold=${els.bold.checked ? 1 : 0}`,
+            "Italic=0",
+            "BorderStyle=3",
+            "Outline=3",
+            "Shadow=2",
+            `MarginV=${els.marginV.value}`,
+            "Alignment=2"
+        ].join(',');
+
+        ffmpegOutput.textContent = `ffmpeg -i input.mp4 -vf "subtitles='subs.srt':force_style='${style}'" -c:a copy output.mp4`;
+    }
+
+    function hexToRgba(hex, opacity) {
+        const bigint = parseInt(hex.replace('#', ''), 16);
+        const r = (bigint >> 16) & 255;
+        const g = (bigint >> 8) & 255;
+        const b = bigint & 255;
+        return `rgba(${r},${g},${b},${opacity})`;
+    }
+
+    copyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(ffmpegOutput.textContent);
+        copyBtn.textContent = "✅ Copied!";
+        setTimeout(() => copyBtn.textContent = "📋 Copy FFmpeg Command", 2000);
+    });
+
+    downloadBtn.addEventListener('click', () => {
+        const blob = new Blob([ffmpegOutput.textContent], { type: "text/plain" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "ffmpeg_subtitle_style.txt";
+        link.click();
+    });
+
+    Object.values(els).forEach(el => el.addEventListener('input', updateSubtitles));
+    updateSubtitles();
+</script>
+</body>
+</html>
