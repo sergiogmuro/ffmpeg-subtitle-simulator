@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding FFmpeg - How it Works & API Overview</title>
+    <style>
+        :root {
+            --bg-dark: #0e0e0e;
+            --panel-bg: #1b1b1b;
+            --text-main: #eee;
+            --accent: #00c896;
+            --accent-hover: #00a37a;
+            --border: #333;
+            --code-bg: #111;
+        }
+
+        body {
+            font-family: "Inter", Arial, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding: 1.5rem;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            max-width: 800px;
+            margin-bottom: 3rem;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        h1 { font-size: 2.5rem; margin: 0.5rem 0; }
+        h2 { color: var(--accent); margin-top: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--panel-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .diagram {
+            background: #252525;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-family: "Consolas", monospace;
+            font-size: 0.9rem;
+            color: #00ff99;
+            margin: 1.5rem 0;
+            border: 1px dashed var(--accent);
+        }
+
+        code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            color: #ff79c6;
+        }
+
+        .api-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .api-card {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 6px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .btn-doc {
+            display: inline-block;
+            background: var(--accent);
+            color: #fff;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 2rem;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .btn-doc:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        footer {
+            margin-top: 3rem;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .api-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 1.8rem; }
+        }
+
+        .back-link {
+            align-self: flex-start;
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s;
+        }
+
+        /* Esto evita que el link cambie de color al ser visitado */
+        .back-link:visited {
+            color: #888;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+<a href="index.html" class="back-link">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+    Back to Generator
+</a>
+<header>
+    <div class="logo-text">Developer Guide</div>
+    <h1>How FFmpeg Works</h1>
+    <p>A deep dive into the world's leading multimedia framework engine.</p>
+</header>
+
+<div class="container">
+    <section>
+        <h2>The Core Workflow</h2>
+        <p>FFmpeg operates on a simple but powerful pipeline. It reads raw containers, extracts packets, decodes them into raw frames, processes them (like adding the subtitles you styled!), re-encodes them, and muxes them back into a container.</p>
+
+        <div class="diagram">
+            [Input File] -> (Demuxer) -> [Encoded Packets] -> (Decoder) <br>
+            -> [Raw Frames] -> (Filters/Processing) -> [Raw Frames] <br>
+            -> (Encoder) -> [Encoded Packets] -> (Muxer) -> [Output File]
+        </div>
+    </section>
+
+    <section>
+        <h2>The Libav Libraries (The API)</h2>
+        <p>FFmpeg is not just a command-line tool; it is a collection of powerful libraries that you can use in C, C++, Python, or Node.js:</p>
+
+        <div class="api-grid">
+            <div class="api-card">
+                <strong>libavcodec</strong>
+                <p>The heart of FFmpeg. Contains all the encoders and decoders for audio and video.</p>
+            </div>
+            <div class="api-card">
+                <strong>libavformat</strong>
+                <p>Handles "muxing" and "demuxing" (reading and writing container formats like MP4, MKV, AVI).</p>
+            </div>
+            <div class="api-card">
+                <strong>libavfilter</strong>
+                <p>This is where the magic happens for subtitles, resizing, and color correction.</p>
+            </div>
+            <div class="api-card">
+                <strong>libswscale</strong>
+                <p>Performs highly optimized image scaling and colorspace/pixel format conversion operations.</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>FFmpeg Filtering (force_style)</h2>
+        <p>When you use the tool on the previous page, you are interacting with <code>libavfilter</code>. The <code>force_style</code> parameter overrides the <strong>ASS (Advanced Substation Alpha)</strong> properties inside the filter chain. FFmpeg parses these strings and applies them to the video frames in real-time during the transcoding process.</p>
+    </section>
+
+    <div style="text-align: center;">
+        <a href="https://ffmpeg.org/documentation.html" target="_blank" class="btn-doc">Visit Official Documentation</a>
+    </div>
+</div>
+
+<footer>
+    &copy; 2025 FFmpeg Subtitle Style Generator Project | Documentation Page
+</footer>
+
+</body>
+</html>

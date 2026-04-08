@@ -202,14 +202,37 @@
                 align-items: center;
             }
         }
+
+        .back-link {
+            align-self: flex-start;
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s;
+        }
+
+        /* Esto evita que el link cambie de color al ser visitado */
+        .back-link:visited {
+            color: #888;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
     </style>
 </head>
 <body>
 
+<a href="how-it-works.html" class="back-link">Learn how FFmpeg works →</a>
 <header>
     <div class="logo"><img src="./logo.png" alt="FFmpeg Subtitle Logo" style="max-height: 100px; max-width: 100%;" /></div>
     <div class="logo">FFmpeg Subtitle Style Generator</div>
     <h2>Preview & generate your subtitle styles in real time</h2>
+
 </header>
 
 <div class="controls">
@@ -264,13 +287,20 @@
 </div>
 
 <div class="subtitle-preview">
+    <div>
+    <h3>Portrait</h3>
     <div class="video-box" style="width:270px; height:480px;">
         <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&h=700&fit=crop" alt="portrait preview">
         <div class="subtitle" id="subtitlePortrait"></div>
     </div>
+    </div>
+
+    <div>
+    <h3>Landscape</h3>
     <div class="video-box" style="width:480px; height:270px;">
         <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=450&fit=crop" alt="landscape preview">
         <div class="subtitle" id="subtitleLandscape"></div>
+    </div>
     </div>
 </div>
 
