@@ -4,10 +4,10 @@
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-P326N9MEBP"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-P326N9MEBP');
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-P326N9MEBP');
     </script>
     <script>
         (function(h,o,t,j,a,r){
@@ -21,24 +21,28 @@
     </script>
 
     <meta charset="UTF-8">
-    <meta name="author" content="FFmpeg Subtitle Style Generator Team">
+    <meta name="author" content="FFmpeg Subtitle Style Generator">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://ffmpeg-subtitle-simulator.vercel.app/">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Generate and preview FFmpeg subtitle styles online. Visualize your SRT captions in real time for 16:9 and 9:16 videos. Free subtitle style checker and visualizer.">
-    <meta name="keywords" content="ffmpeg, subtitle visualizer, subtitle checker, subtitle style generator, srt visualizer, srt style editor, subtitle preview, video captions, ffmpeg subtitles online, subtitle simulator, captions styling, subtitle creator, subtitle designer">
-    <meta property="og:title" content="FFmpeg Subtitle Style Generator – Online Visualizer & Checker">
-    <meta property="og:description" content="Visualize and copy FFmpeg subtitle styles online. Preview how your captions will look in vertical and horizontal video formats.">
+    <meta name="description" content="Interactively design, preview, and generate FFmpeg subtitle styles online. Preview SRT and ASS caption appearances on portrait and landscape video containers in real time.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content="FFmpeg Subtitle Style Generator – Online Visualizer &amp; Command Generator">
+    <meta property="og:description" content="Generate and preview FFmpeg subtitle styles online in real time for 16:9 and 9:16 video formats. Copy ready-to-use FFmpeg commands instantly.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="./logo.png">
     <meta property="og:url" content="https://ffmpeg-subtitle-simulator.vercel.app/">
+
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="FFmpeg Subtitle Style Generator – Online Visualizer & Checker">
-    <meta name="twitter:description" content="Generate and simulate FFmpeg subtitle styles in real time for any video format.">
+    <meta name="twitter:title" content="FFmpeg Subtitle Style Generator – Online Visualizer &amp; Command Generator">
+    <meta name="twitter:description" content="Generate and simulate FFmpeg subtitle styles in real time for portrait and landscape video formats.">
     <meta name="twitter:image" content="https://ffmpeg-subtitle-simulator.vercel.app/logo.png">
+
     <meta name="google-adsense-account" content="ca-pub-4831050341683129">
     <link rel="icon" type="image/vnd.icon" href="./favicon.ico">
-    <title>FFmpeg Subtitle Style Generator – Online Visualizer & Checker</title>
+    <title>FFmpeg Subtitle Style Generator – Online Visualizer &amp; Command Generator</title>
 
     <!-- Google Ads -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4831050341683129"
@@ -52,6 +56,7 @@
             --accent: #00c896;
             --accent-hover: #00a37a;
             --border: #333;
+            --code-bg: #111;
         }
 
         body {
@@ -60,100 +65,199 @@
             color: var(--text-main);
             margin: 0;
             padding: 1.5rem;
+            line-height: 1.6;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 2rem;
         }
 
         header {
+            text-align: center;
+            max-width: 900px;
+            margin-bottom: 2rem;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.3rem;
-            text-align: center;
         }
 
-        .logo {
+        .logo-img {
+            max-height: 80px;
+            max-width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-text {
             font-weight: 700;
-            font-size: 1.8rem;
+            font-size: 1.1rem;
             color: var(--accent);
-            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        h1 {
+            font-size: 2.3rem;
+            margin: 0.4rem 0;
+            line-height: 1.2;
         }
 
         h2 {
-            font-weight: 400;
-            color: #bbb;
-            margin-top: 0;
+            color: var(--accent);
+            margin-top: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+            font-weight: 600;
         }
 
-        .controls {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1rem;
+        h3 {
+            color: #fff;
+            margin-top: 1rem;
+            margin-bottom: 0.4rem;
+            font-size: 1rem;
+        }
+
+        p {
+            margin: 0.8rem 0;
+            color: #ccc;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1150px;
             background: var(--panel-bg);
-            padding: 1.5rem;
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-sizing: border-box;
+        }
+
+        /* Layout de Panel Dividido (Sidebar + Preview) */
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 1.5rem;
+            align-items: start;
+            margin-bottom: 2.5rem;
+        }
+
+        /* Panel de Controles (Sidebar Izquierda) */
+        .controls-sidebar {
+            background: #141414;
+            padding: 1.2rem;
             border-radius: 10px;
             border: 1px solid var(--border);
-            width: 100%;
-            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            max-height: 820px;
+            overflow-y: auto;
+        }
+
+        .controls-sidebar h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #2a2a2a;
+            padding-bottom: 0.5rem;
+            color: var(--accent);
         }
 
         label {
             display: flex;
             flex-direction: column;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             color: #ccc;
-            gap: 0.4rem;
+            gap: 0.3rem;
         }
 
         input, select {
             width: 100%;
-            background: #111;
+            background: var(--code-bg);
             border: 1px solid #333;
             color: #fff;
             border-radius: 4px;
-            padding: 0.3rem 0.4rem;
+            padding: 0.35rem 0.5rem;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        input[type="checkbox"] {
+            width: auto;
+            align-self: flex-start;
+            margin-top: 0.2rem;
+            cursor: pointer;
+        }
+
+        input[type="range"] {
+            padding: 0;
+            cursor: pointer;
+        }
+
+        /* Área Visual Derecha */
+        .preview-workspace {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            background: #141414;
+            padding: 1.2rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
         }
 
         .subtitle-preview {
             display: flex;
             flex-wrap: wrap;
-            gap: 2rem;
+            gap: 1.5rem;
             justify-content: center;
+            align-items: flex-end;
+        }
+
+        .preview-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .preview-card h3 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .video-box {
             position: relative;
             background: #000;
             overflow: hidden;
-            border-radius: 10px;
-            border: 1px solid #333;
+            border-radius: 8px;
+            border: 1px solid var(--border);
         }
 
         .video-box img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.9;
+            opacity: 0.85;
         }
 
         .subtitle {
-            font-family: Arial;
+            font-family: Arial, sans-serif;
             position: absolute;
-            width: 92%;
+            width: 90%;
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
             white-space: pre-wrap;
-            border-radius: 2px;
+            box-sizing: border-box;
             color: #fff;
+            pointer-events: none;
         }
 
         .actions {
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 0.8rem;
             justify-content: center;
             align-items: center;
         }
@@ -162,45 +266,108 @@
             background: var(--accent);
             color: #fff;
             border: none;
-            padding: 0.8rem 1.4rem;
-            border-radius: 8px;
+            padding: 0.7rem 1.2rem;
+            border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.2s, transform 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.88rem;
         }
 
         .btn:hover {
             background: var(--accent-hover);
+            transform: translateY(-1px);
         }
 
         pre {
-            background: var(--panel-bg);
-            padding: 1rem 1.5rem;
+            background: var(--code-bg);
+            padding: 1rem 1.2rem;
             border-radius: 8px;
             width: 100%;
-            max-width: 900px;
             overflow-x: auto;
             color: #00ff99;
-            font-family: "Consolas", monospace;
-            font-size: 0.9rem;
-            border: 1px solid #333;
+            font-family: "Consolas", "Monaco", monospace;
+            font-size: 0.85rem;
+            border: 1px solid var(--border);
+            box-sizing: border-box;
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin: 0;
         }
 
-        footer {
-            color: #666;
-            font-size: 0.8rem;
+        code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            color: #ff79c6;
+            font-family: "Consolas", "Monaco", monospace;
+            font-size: 0.88em;
+        }
+
+        /* Estilos de Tarjetas e Información */
+        .api-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.2rem;
+            margin-top: 1.2rem;
+        }
+
+        .api-card {
+            background: var(--code-bg);
+            padding: 1.2rem;
+            border-radius: 6px;
+            border-left: 4px solid var(--accent);
+            border-top: 1px solid #222;
+            border-right: 1px solid #222;
+            border-bottom: 1px solid #222;
+        }
+
+        .api-card strong {
+            color: #fff;
+            display: block;
+            margin-bottom: 0.3rem;
+            font-size: 0.95rem;
+        }
+
+        .api-card p {
+            margin: 0;
+            font-size: 0.88rem;
+            color: #bbb;
+        }
+
+        .guide-banner {
+            background: #252525;
+            padding: 1.8rem;
+            border-radius: 8px;
             text-align: center;
-            margin-top: 2rem;
+            margin: 2rem 0;
+            border: 1px dashed var(--accent);
         }
 
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 1.4rem;
-            }
-            .subtitle-preview {
-                flex-direction: column;
-                align-items: center;
-            }
+        .guide-banner h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+
+        .btn-doc {
+            display: inline-block;
+            background: var(--accent);
+            color: #fff;
+            text-decoration: none;
+            padding: 0.8rem 1.6rem;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .btn-doc:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
         }
 
         .back-link {
@@ -211,11 +378,10 @@
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
             transition: color 0.2s;
         }
 
-        /* Esto evita que el link cambie de color al ser visitado */
         .back-link:visited {
             color: #888;
         }
@@ -223,213 +389,424 @@
         .back-link:hover {
             color: var(--accent);
         }
+
+        footer {
+            margin-top: 3rem;
+            color: #666;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        footer p {
+            color: #666;
+            margin: 0.3rem 0;
+        }
+
+        ol, ul {
+            color: #ccc;
+            padding-left: 1.4rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsividad para pantallas pequeñas */
+        @media (max-width: 950px) {
+            .workspace-grid {
+                grid-template-columns: 1fr;
+            }
+            .controls-sidebar {
+                max-height: none;
+            }
+            .container {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            .subtitle-preview {
+                flex-direction: column;
+                align-items: center;
+            }
+            .api-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
 
-<a href="how-it-works.html" class="back-link">Learn how FFmpeg works →</a>
-<header>
-    <div class="logo"><img src="./logo.png" alt="FFmpeg Subtitle Logo" style="max-height: 100px; max-width: 100%;" /></div>
-    <div class="logo">FFmpeg Subtitle Style Generator</div>
-    <h2>Preview & generate your subtitle styles in real time</h2>
+<a href="how-it-works.html" class="back-link">
+    Read the complete FFmpeg guide
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+        <polyline points="12 5 19 12 12 19"></polyline>
+    </svg>
+</a>
 
+<header>
+    <img src="./logo.png" alt="FFmpeg Subtitle Generator Logo" class="logo-img">
+    <div class="logo-text">Online Visualizer &amp; Config Generator</div>
+    <h1>FFmpeg Subtitle Style Generator</h1>
+    <p>Interactively design, preview, and generate ASS style parameters for FFmpeg subtitle hardcoding across portrait (9:16) and landscape (16:9) aspect ratios.</p>
 </header>
 
-<div class="controls">
-    <label>Text
-        <input id="subtitleText" type="text" value="This is a sample subtitle text for testing styles.">
-    </label>
-    <label>Font size
-        <input id="fontSize" type="number" min="8" max="64" value="22">
-    </label>
-    <label>Text color
-        <input id="textColor" type="color" value="#FFFFFF">
-    </label>
-    <label>Background color
-        <input id="bgColor" type="color" value="#000000">
-    </label>
-    <label>Background opacity
-        <input id="bgOpacity" type="range" min="0" max="1" step="0.05" value="0.9">
-    </label>
-    <label>Bold
-        <input id="bold" type="checkbox" checked>
-    </label>
-    <label>Italic
-        <input id="italic" type="checkbox">
-    </label>
-    <label>Outline (stroke)
-        <input id="outline" type="range" min="0" max="10" value="3">
-    </label>
-    <label>Shadow
-        <input id="shadow" type="range" min="0" max="10" value="2">
-    </label>
-    <label>Alignment
-        <select id="alignment">
-            <option value="1">Bottom Left</option>
-            <option value="2" selected>Bottom Center</option>
-            <option value="3">Bottom Right</option>
-            <option value="5">Middle Left</option>
-            <option value="6">Middle Center</option>
-            <option value="7">Top Left</option>
-            <option value="8">Top Center</option>
-            <option value="9">Top Right</option>
-        </select>
-    </label>
-    <label>Padding (vertical)
-        <input id="padding" type="range" min="0" max="30" value="10">
-    </label>
-    <label>MarginV
-        <input id="marginV" type="range" min="0" max="200" value="80">
-    </label>
-    <label>Border radius
-        <input id="radius" type="range" min="0" max="10" value="2">
-    </label>
-</div>
+<main class="container">
 
-<div class="subtitle-preview">
-    <div>
-    <h3>Portrait</h3>
-    <div class="video-box" style="width:270px; height:480px;">
-        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&h=700&fit=crop" alt="portrait preview">
-        <div class="subtitle" id="subtitlePortrait"></div>
+    <!-- Workspace interactivo con Panel Izquierdo y Previsualización Derecha -->
+    <div class="workspace-grid" id="generator-tool">
+
+        <!-- Panel Izquierdo: Controles -->
+        <aside class="controls-sidebar">
+            <h3>Style Controls</h3>
+            <label>Text
+                <input id="subtitleText" type="text" value="This is a sample subtitle text for testing styles.">
+            </label>
+            <label>Font size
+                <input id="fontSize" type="number" min="8" max="64" value="22">
+            </label>
+            <label>Text color
+                <input id="textColor" type="color" value="#FFFFFF">
+            </label>
+            <label>Background color
+                <input id="bgColor" type="color" value="#000000">
+            </label>
+            <label>Background opacity
+                <input id="bgOpacity" type="range" min="0" max="1" step="0.05" value="0.9">
+            </label>
+            <label>Bold
+                <input id="bold" type="checkbox" checked>
+            </label>
+            <label>Italic
+                <input id="italic" type="checkbox">
+            </label>
+            <label>Outline (stroke)
+                <input id="outline" type="range" min="0" max="10" value="3">
+            </label>
+            <label>Shadow
+                <input id="shadow" type="range" min="0" max="10" value="2">
+            </label>
+            <label>Alignment
+                <select id="alignment">
+                    <option value="1">Bottom Left</option>
+                    <option value="2" selected>Bottom Center</option>
+                    <option value="3">Bottom Right</option>
+                    <option value="5">Middle Left</option>
+                    <option value="6">Middle Center</option>
+                    <option value="7">Top Left</option>
+                    <option value="8">Top Center</option>
+                    <option value="9">Top Right</option>
+                </select>
+            </label>
+            <label>Padding (vertical)
+                <input id="padding" type="range" min="0" max="30" value="10">
+            </label>
+            <label>MarginV
+                <input id="marginV" type="range" min="0" max="200" value="80">
+            </label>
+            <label>Border radius
+                <input id="radius" type="range" min="0" max="10" value="2">
+            </label>
+        </aside>
+
+        <!-- Área Derecha: Previsualizaciones y Comando -->
+        <section class="preview-workspace">
+            <div class="subtitle-preview">
+                <div class="preview-card">
+                    <h3>Portrait (9:16)</h3>
+                    <div class="video-box" style="width:215px; height:380px;">
+                        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&amp;h=700&amp;fit=crop" alt="Portrait video preview canvas">
+                        <div class="subtitle" id="subtitlePortrait"></div>
+                    </div>
+                </div>
+
+                <div class="preview-card">
+                    <h3>Landscape (16:9)</h3>
+                    <div class="video-box" style="width:380px; height:215px;">
+                        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&amp;h=450&amp;fit=crop" alt="Landscape video preview canvas">
+                        <div class="subtitle" id="subtitleLandscape"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn" id="copyFFmpeg">📋 Copy FFmpeg Command</button>
+                <button class="btn" id="downloadConfig">⬇️ Download Config</button>
+            </div>
+
+            <pre id="ffmpegOutput"></pre>
+        </section>
+
     </div>
+
+    <!-- Secciones Educativas y Técnicas Detalladas -->
+    <section>
+        <h2>What is the FFmpeg Subtitle Style Generator?</h2>
+        <p>
+            When burning (hardcoding) subtitles into video streams using FFmpeg's <code>subtitles</code> filter, formatting plain SubRip (<code>.srt</code>) files requires constructing complex <code>force_style</code> parameters based on the Advanced SubStation Alpha (ASS) specifications.
+        </p>
+        <p>
+            Writing these syntax parameters manually in a terminal often leads to time-consuming trial and error. You have to re-encode test clips repeatedly just to verify if font scaling, line height, background opacity, or vertical positioning looks correct across different video aspect ratios.
+        </p>
+        <p>
+            This tool provides a real-time visual simulator for both vertical videos (Shorts, Reels, TikTok) and traditional horizontal formats. It translates standard Web styling inputs into technically precise ASS color hexes and filter syntax ready to paste straight into your terminal or automated media encoding pipeline.
+        </p>
+    </section>
+
+    <section>
+        <h2>How FFmpeg Subtitle Styling Works</h2>
+        <p>
+            FFmpeg renders text subtitles onto video frames using the <code>libavfilter</code> library, specifically utilizing <code>libass</code> under the hood for subtitle rasterization.
+        </p>
+        <p>
+            When you pass an <code>.srt</code> file to FFmpeg via <code>-vf "subtitles=file.srt"</code>, plain text lacks embedded styling metadata. The <code>force_style</code> parameter acts as an inline override array that dynamically builds a temporary ASS style header during the filtering graph evaluation.
+        </p>
+        <pre>-vf "subtitles='input.srt':force_style='FontName=Arial,FontSize=22,PrimaryColour=&amp;H00FFFFFF&amp;,BorderStyle=3'"</pre>
+        <p>
+            It is important to note that <code>force_style</code> does not modify your original subtitle file on disk. Instead, it instructs the FFmpeg filter graph to override specific rendering attributes in memory during the frame drawing phase.
+        </p>
+    </section>
+
+    <section>
+        <h2>Understanding the Generated Command</h2>
+        <p>
+            The generated command constructed by this tool follows standard FFmpeg CLI conventions for filter processing:
+        </p>
+        <pre>ffmpeg -i input.mp4 -vf "subtitles='YOUR_SUBS_FILE.srt':force_style='FontName=Arial,FontSize=22,PrimaryColour=&amp;H00FFFFFF&amp;,OutlineColour=&amp;H00000000&amp;,BackColour=&amp;H19000000&amp;,Bold=1,Italic=0,BorderStyle=3,Outline=3,Shadow=2,MarginV=80,Alignment=2'" -c:a copy output.mp4</pre>
+
+        <div class="api-grid">
+            <div class="api-card">
+                <strong><code>-i input.mp4</code></strong>
+                <p>Specifies the source media file containing the video track.</p>
+            </div>
+            <div class="api-card">
+                <strong><code>-vf "subtitles=..."</code></strong>
+                <p>Invokes the video filter pipeline and attaches the designated SRT subtitle file.</p>
+            </div>
+            <div class="api-card">
+                <strong><code>force_style='...'</code></strong>
+                <p>Applies comma-separated ASS formatting directives to override subtitle typography and layout.</p>
+            </div>
+            <div class="api-card">
+                <strong><code>-c:a copy</code></strong>
+                <p>Directly copies the audio stream without re-encoding, preserving audio quality and saving processing time.</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Subtitle Style Parameters Reference</h2>
+        <p>The configurator controls the following primary ASS subtitle attributes:</p>
+
+        <div class="api-grid">
+            <div class="api-card">
+                <strong>Font &amp; Size</strong>
+                <p><code>FontName</code> sets the typeface family installed on the encoding host. <code>FontSize</code> specifies the point size relative to the frame height.</p>
+            </div>
+            <div class="api-card">
+                <strong>PrimaryColour</strong>
+                <p>Represents the main text color formatted in ASS hexadecimal order: <code>&amp;HAARRGGBB&amp;</code> (Alpha, Blue, Green, Red).</p>
+            </div>
+            <div class="api-card">
+                <strong>BackColour &amp; Opacity</strong>
+                <p>Defines background box or shadow color. ASS alpha ranges from <code>00</code> (fully opaque) to <code>FF</code> (fully transparent).</p>
+            </div>
+            <div class="api-card">
+                <strong>BorderStyle</strong>
+                <p>Setting <code>BorderStyle=3</code> creates an opaque bounding background box behind text, whereas <code>1</code> creates an outline border.</p>
+            </div>
+            <div class="api-card">
+                <strong>Alignment</strong>
+                <p>Uses standard numeric keypad mapping: 2 for Bottom-Center, 8 for Top-Center, 5 for Middle-Center, etc.</p>
+            </div>
+            <div class="api-card">
+                <strong>MarginV</strong>
+                <p>Defines vertical padding in pixels from the top or bottom edge depending on the selected alignment orientation.</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Common Use Cases</h2>
+        <ul>
+            <li><strong>Social Media Content Creation:</strong> Rapidly style center-aligned, high-contrast captions for vertical videos (9:16) destined for Instagram Reels, YouTube Shorts, or TikTok.</li>
+            <li><strong>Automated Video Processing Pipelines:</strong> Integrate standardized FFmpeg command arguments into serverless video processing scripts (Node.js, Python, AWS Lambda).</li>
+            <li><strong>Accessibility &amp; Readability Enhancement:</strong> Add translucent or solid background bounding boxes behind subtitles to ensure legibility over varying, colorful video backgrounds.</li>
+            <li><strong>Batch Subtitle Burning:</strong> Apply consistent typography across entire series or video libraries using a single tested <code>force_style</code> string.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>What subtitle formats support advanced styling in FFmpeg?</h3>
+        <p>Advanced SubStation Alpha (ASS/SSA) natively supports complete typography and positional styling. When using plain SRT files, FFmpeg's <code>subtitles</code> filter converts SRT cues into ASS structures internally, allowing <code>force_style</code> overrides to function.</p>
+
+        <h3>Does this online tool render or upload my video?</h3>
+        <p>No. This tool operates entirely client-side in your web browser. It provides a CSS-based visual simulation of subtitle styling and generates the corresponding CLI command text. No media files are ever uploaded or processed on our servers.</p>
+
+        <h3>Why does the color code in the generated command look different from CSS hex?</h3>
+        <p>Web colors use <code>#RRGGBB</code> format. ASS styling notation uses <code>&amp;HAABBGGRR&amp;</code> where alpha (transparency) comes first, followed by Blue, Green, and Red channel bytes in reverse order.</p>
+
+        <h3>Why does ASS opacity work opposite to CSS opacity?</h3>
+        <p>In standard CSS, an opacity of 1.0 represents 100% opacity, and 0.0 is completely transparent. In ASS notation, <code>00</code> alpha represents complete opacity, while <code>FF</code> (255) represents 100% transparency.</p>
+
+        <h3>What happens if the requested font is missing on my server?</h3>
+        <p>If the system running FFmpeg does not have the specified <code>FontName</code> installed, <code>fontconfig</code> / <code>libass</code> will automatically fall back to a default system font (such as Sans or DejaVu Sans).</p>
+    </section>
+
+    <div class="guide-banner">
+        <h3>Want to understand what happens under the hood?</h3>
+        <p>Learn more about demuxing, libavfilter graph architecture, and codec handling in our technical guide.</p>
+        <a href="how-it-works.html" class="btn-doc">Read the FFmpeg Developer Guide →</a>
     </div>
 
-    <div>
-    <h3>Landscape</h3>
-    <div class="video-box" style="width:480px; height:270px;">
-        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=450&fit=crop" alt="landscape preview">
-        <div class="subtitle" id="subtitleLandscape"></div>
-    </div>
-    </div>
-</div>
+</main>
 
-<div class="actions">
-    <button class="btn" id="copyFFmpeg">📋 Copy FFmpeg Command</button>
-    <button class="btn" id="downloadConfig">⬇️ Download Config</button>
-</div>
-
-<pre id="ffmpegOutput"></pre>
-
-<footer>© 2025 FFmpeg Subtitle Style Generator | Free online subtitle visualizer & checker</footer>
+<footer>
+    <p>© 2026 FFmpeg Subtitle Style Generator</p>
+    <p>Free online subtitle visualizer &amp; command generator for developers and video editors.</p>
+</footer>
 
 <script>
-const els = {
-    text: document.getElementById('subtitleText'),
-    fontSize: document.getElementById('fontSize'),
-    textColor: document.getElementById('textColor'),
-    bgColor: document.getElementById('bgColor'),
-    bgOpacity: document.getElementById('bgOpacity'),
-    bold: document.getElementById('bold'),
-    italic: document.getElementById('italic'),
-    padding: document.getElementById('padding'),
-    marginV: document.getElementById('marginV'),
-    radius: document.getElementById('radius'),
-    outline: document.getElementById('outline'),
-    shadow: document.getElementById('shadow'),
-    alignment: document.getElementById('alignment')
-};
-
-const portraitSubtitle = document.getElementById('subtitlePortrait');
-const landscapeSubtitle = document.getElementById('subtitleLandscape');
-const ffmpegOutput = document.getElementById('ffmpegOutput');
-const copyBtn = document.getElementById('copyFFmpeg');
-const downloadBtn = document.getElementById('downloadConfig');
-
-function rgbToAss(hex) {
-    const bigint = parseInt(hex.replace('#', ''), 16);
-    const r = (bigint >> 16) & 255;
-    const g = (bigint >> 8) & 255;
-    const b = bigint & 255;
-    return `${b.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${r.toString(16).padStart(2, '0')}`.toUpperCase();
-}
-
-function updateSubtitles() {
-    const bgRGBA = hexToRgba(els.bgColor.value, parseFloat(els.bgOpacity.value));
-    const style = {
-        color: els.textColor.value,
-        backgroundColor: bgRGBA,
-        fontSize: els.fontSize.value + 'px',
-        fontWeight: els.bold.checked ? 'bold' : 'normal',
-        fontStyle: els.italic.checked ? 'italic' : 'normal',
-        padding: els.padding.value + 'px',
-        bottom: els.marginV.value + 'px',
-        borderRadius: els.radius.value + 'px',
-        textAlign: 'center',
-        textShadow: `0px ${els.shadow.value}px ${els.shadow.value * 1.2}px rgba(0,0,0,0.8)`,
-        WebkitTextStroke: `${els.outline.value / 2}px black`
+    const els = {
+        text: document.getElementById('subtitleText'),
+        fontSize: document.getElementById('fontSize'),
+        textColor: document.getElementById('textColor'),
+        bgColor: document.getElementById('bgColor'),
+        bgOpacity: document.getElementById('bgOpacity'),
+        bold: document.getElementById('bold'),
+        italic: document.getElementById('italic'),
+        padding: document.getElementById('padding'),
+        marginV: document.getElementById('marginV'),
+        radius: document.getElementById('radius'),
+        outline: document.getElementById('outline'),
+        shadow: document.getElementById('shadow'),
+        alignment: document.getElementById('alignment')
     };
 
-    portraitSubtitle.textContent = els.text.value;
-    landscapeSubtitle.textContent = els.text.value;
+    const portraitSubtitle = document.getElementById('subtitlePortrait');
+    const landscapeSubtitle = document.getElementById('subtitleLandscape');
+    const ffmpegOutput = document.getElementById('ffmpegOutput');
+    const copyBtn = document.getElementById('copyFFmpeg');
+    const downloadBtn = document.getElementById('downloadConfig');
 
-    [portraitSubtitle, landscapeSubtitle].forEach(el => {
-        Object.assign(el.style, style);
-        el.style.top = '';
-        el.style.transform = 'translateX(-50%)';
+    /**
+     * Converts a hex color string (#RRGGBB) to ASS color format (&HBBGGRR&).
+     */
+    function rgbToAss(hex) {
+        const bigint = parseInt(hex.replace('#', ''), 16);
+        const r = (bigint >> 16) & 255;
+        const g = (bigint >> 8) & 255;
+        const b = bigint & 255;
+        return `${b.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${r.toString(16).padStart(2, '0')}`.toUpperCase();
+    }
 
-        switch (parseInt(els.alignment.value)) {
-            case 1: el.style.bottom = els.marginV.value + 'px'; el.style.textAlign = 'left'; break;
-            case 2: el.style.bottom = els.marginV.value + 'px'; el.style.textAlign = 'center'; break;
-            case 3: el.style.bottom = els.marginV.value + 'px'; el.style.textAlign = 'right'; break;
-            case 5: el.style.top = '50%'; el.style.transform = 'translate(-50%, -50%)'; el.style.textAlign = 'left'; break;
-            case 6: el.style.top = '50%'; el.style.transform = 'translate(-50%, -50%)'; el.style.textAlign = 'center'; break;
-            case 7: el.style.top = '20px'; el.style.textAlign = 'left'; break;
-            case 8: el.style.top = '20px'; el.style.textAlign = 'center'; break;
-            case 9: el.style.top = '20px'; el.style.textAlign = 'right'; break;
-        }
+    /**
+     * Converts HTML hex and opacity input into standard RGBA for web preview.
+     */
+    function hexToRgba(hex, opacity) {
+        const bigint = parseInt(hex.replace('#', ''), 16);
+        const r = (bigint >> 16) & 255;
+        const g = (bigint >> 8) & 255;
+        const b = bigint & 255;
+        return `rgba(${r},${g},${b},${opacity})`;
+    }
+
+    /**
+     * Updates visual DOM elements in both portrait and landscape preview containers.
+     */
+    function updateSubtitles() {
+        const bgRGBA = hexToRgba(els.bgColor.value, parseFloat(els.bgOpacity.value));
+        const style = {
+            color: els.textColor.value,
+            backgroundColor: bgRGBA,
+            fontSize: els.fontSize.value + 'px',
+            fontWeight: els.bold.checked ? 'bold' : 'normal',
+            fontStyle: els.italic.checked ? 'italic' : 'normal',
+            padding: els.padding.value + 'px',
+            borderRadius: els.radius.value + 'px',
+            textAlign: 'center',
+            textShadow: `0px ${els.shadow.value}px ${els.shadow.value * 1.2}px rgba(0,0,0,0.8)`,
+            WebkitTextStroke: `${els.outline.value / 2}px black`
+        };
+
+        portraitSubtitle.textContent = els.text.value;
+        landscapeSubtitle.textContent = els.text.value;
+
+        [portraitSubtitle, landscapeSubtitle].forEach(el => {
+            Object.assign(el.style, style);
+            el.style.top = '';
+            el.style.bottom = '';
+            el.style.transform = 'translateX(-50%)';
+
+            const alignVal = parseInt(els.alignment.value);
+            const marginPX = els.marginV.value + 'px';
+
+            switch (alignVal) {
+                case 1: el.style.bottom = marginPX; el.style.textAlign = 'left'; break;
+                case 2: el.style.bottom = marginPX; el.style.textAlign = 'center'; break;
+                case 3: el.style.bottom = marginPX; el.style.textAlign = 'right'; break;
+                case 5: el.style.top = '50%'; el.style.transform = 'translate(-50%, -50%)'; el.style.textAlign = 'left'; break;
+                case 6: el.style.top = '50%'; el.style.transform = 'translate(-50%, -50%)'; el.style.textAlign = 'center'; break;
+                case 7: el.style.top = '20px'; el.style.textAlign = 'left'; break;
+                case 8: el.style.top = '20px'; el.style.textAlign = 'center'; break;
+                case 9: el.style.top = '20px'; el.style.textAlign = 'right'; break;
+            }
+        });
+
+        generateFFmpegStyle();
+    }
+
+    /**
+     * Generates technical ASS style configuration string and updates command output element.
+     */
+    function generateFFmpegStyle() {
+        const textColor = rgbToAss(els.textColor.value);
+        const bgColor = rgbToAss(els.bgColor.value);
+
+        // Correct ASS Alpha Calculation: 0.0 opacity in CSS = FF in ASS (fully transparent)
+        // 1.0 opacity in CSS = 00 in ASS (fully opaque)
+        const opacityHex = Math.round((1 - parseFloat(els.bgOpacity.value)) * 255)
+            .toString(16)
+            .padStart(2, '0')
+            .toUpperCase();
+
+        const style = [
+            "FontName=Arial",
+            `FontSize=${els.fontSize.value}`,
+            `PrimaryColour=&H00${textColor}&`,
+            `OutlineColour=&H00000000&`,
+            `BackColour=&H${opacityHex}${bgColor}&`,
+            `Bold=${els.bold.checked ? 1 : 0}`,
+            `Italic=${els.italic.checked ? 1 : 0}`,
+            `BorderStyle=3`,
+            `Outline=${els.outline.value}`,
+            `Shadow=${els.shadow.value}`,
+            `MarginV=${els.marginV.value}`,
+            `Alignment=${els.alignment.value}`
+        ].join(',');
+
+        ffmpegOutput.textContent = `ffmpeg -i input.mp4 -vf "subtitles='YOUR_SUBS_FILE.srt':force_style='${style}'" -c:a copy output.mp4`;
+    }
+
+    copyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(ffmpegOutput.textContent);
+        copyBtn.textContent = "✅ Copied!";
+        setTimeout(() => copyBtn.textContent = "📋 Copy FFmpeg Command", 2000);
     });
 
-    generateFFmpegStyle();
-}
+    downloadBtn.addEventListener('click', () => {
+        const blob = new Blob([ffmpegOutput.textContent], { type: "text/plain" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "ffmpeg_subtitle_style.txt";
+        link.click();
+    });
 
-function generateFFmpegStyle() {
-    const textColor = rgbToAss(els.textColor.value);
-    const bgColor = rgbToAss(els.bgColor.value);
-    const opacityHex = Math.round(els.bgOpacity.value * 255).toString(16).padStart(2, '0').toUpperCase();
-
-    const style = [
-        "FontName=Arial Bold",
-        `FontSize=${els.fontSize.value}`,
-        `PrimaryColour=&H${textColor}&`,
-        `OutlineColour=&H${bgColor}&`,
-        `BackColour=&H${opacityHex}${bgColor}&`,
-        `Bold=${els.bold.checked ? 1 : 0}`,
-        `Italic=${els.italic.checked ? 1 : 0}`,
-        `BorderStyle=3`,
-        `Outline=${els.outline.value}`,
-        `Shadow=${els.shadow.value}`,
-        `MarginV=${els.marginV.value}`,
-        `Alignment=${els.alignment.value}`
-    ].join(',');
-
-    ffmpegOutput.textContent = `ffmpeg -i input.mp4 -vf "subtitles='YOUR_SUBS_FILE.srt':force_style='${style}'" -c:a copy output.mp4`;
-}
-
-function hexToRgba(hex, opacity) {
-    const bigint = parseInt(hex.replace('#', ''), 16);
-    const r = (bigint >> 16) & 255;
-    const g = (bigint >> 8) & 255;
-    const b = bigint & 255;
-    return `rgba(${r},${g},${b},${opacity})`;
-}
-
-copyBtn.addEventListener('click', () => {
-    navigator.clipboard.writeText(ffmpegOutput.textContent);
-    copyBtn.textContent = "✅ Copied!";
-    setTimeout(() => copyBtn.textContent = "📋 Copy FFmpeg Command", 2000);
-});
-
-downloadBtn.addEventListener('click', () => {
-    const blob = new Blob([ffmpegOutput.textContent], { type: "text/plain" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "ffmpeg_subtitle_style.txt";
-    link.click();
-});
-
-Object.values(els).forEach(el => el.addEventListener('input', updateSubtitles));
-updateSubtitles();
+    Object.values(els).forEach(el => el.addEventListener('input', updateSubtitles));
+    updateSubtitles();
 </script>
 </body>
 </html>

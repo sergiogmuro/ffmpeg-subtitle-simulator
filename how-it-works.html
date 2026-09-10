@@ -5,24 +5,42 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-P326N9MEBP"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
         gtag('js', new Date());
         gtag('config', 'G-P326N9MEBP');
     </script>
     <script>
-        (function(h,o,t,j,a,r){
-            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-            h._hjSettings={hjid:6572044,hjsv:6};
-            a=o.getElementsByTagName('head')[0];
-            r=o.createElement('script');r.async=1;
-            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        (function (h, o, t, j, a, r) {
+            h.hj = h.hj || function () {
+                (h.hj.q = h.hj.q || []).push(arguments)
+            };
+            h._hjSettings = {hjid: 6572044, hjsv: 6};
+            a = o.getElementsByTagName('head')[0];
+            r = o.createElement('script');
+            r.async = 1;
+            r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
             a.appendChild(r);
-        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+        })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
     </script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Understanding FFmpeg - How it Works & API Overview</title>
+    <title>How FFmpeg Works: Subtitles, Filters & libav Libraries</title>
+    <meta name="description"
+          content="Learn how FFmpeg works, how its multimedia processing pipeline works, how subtitle filtering works, and how force_style controls subtitle appearance."
+    >
+
+    <meta name="robots"
+          content="index, follow"
+    >
+
+    <link rel="canonical"
+          href="https://ffmpeg-subtitle-simulator.vercel.app/how-it-works.html"
+    >
     <style>
         :root {
             --bg-dark: #0e0e0e;
@@ -61,8 +79,17 @@
             margin-bottom: 10px;
         }
 
-        h1 { font-size: 2.5rem; margin: 0.5rem 0; }
-        h2 { color: var(--accent); margin-top: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+        h1 {
+            font-size: 2.5rem;
+            margin: 0.5rem 0;
+        }
+
+        h2 {
+            color: var(--accent);
+            margin-top: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
 
         .container {
             width: 100%;
@@ -71,7 +98,7 @@
             padding: 2.5rem;
             border-radius: 12px;
             border: 1px solid var(--border);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
         .diagram {
@@ -131,8 +158,13 @@
         }
 
         @media (max-width: 768px) {
-            .api-grid { grid-template-columns: 1fr; }
-            h1 { font-size: 1.8rem; }
+            .api-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
         }
 
         .back-link {
@@ -160,63 +192,629 @@
 <body>
 
 <a href="index.html" class="back-link">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-    Back to Generator
+
+    <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+    >
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+    </svg>
+
+    Back to Subtitle Style Generator
+
 </a>
+
+
 <header>
-    <div class="logo-text">Developer Guide</div>
+
+    <div class="logo-text">
+        Developer Guide
+    </div>
+
     <h1>How FFmpeg Works</h1>
-    <p>A deep dive into the world's leading multimedia framework engine.</p>
+
+    <p>
+        A practical introduction to FFmpeg's multimedia processing pipeline,
+        libraries, filtering system, and subtitle rendering.
+    </p>
+
 </header>
 
-<div class="container">
+
+<main class="container">
+
+    <!-- Introduction -->
     <section>
-        <h2>The Core Workflow</h2>
-        <p>FFmpeg operates on a simple but powerful pipeline. It reads raw containers, extracts packets, decodes them into raw frames, processes them (like adding the subtitles you styled!), re-encodes them, and muxes them back into a container.</p>
+
+        <h2>What is FFmpeg?</h2>
+
+        <p>
+            FFmpeg is an open-source multimedia framework used to process
+            video, audio, images, and subtitles. It provides command-line
+            tools and libraries for reading, converting, filtering, encoding,
+            decoding, and combining multimedia streams.
+        </p>
+
+        <p>
+            It is commonly used for tasks such as converting video formats,
+            compressing media, extracting audio, resizing video, adding
+            subtitles, and preparing media for different platforms.
+        </p>
+
+        <p>
+            The subtitle style generator on this website uses FFmpeg's
+            subtitle filtering capabilities to help you experiment with
+            subtitle appearance before processing a video.
+        </p>
+
+    </section>
+
+
+    <!-- Core workflow -->
+    <section>
+
+        <h2>The Core FFmpeg Workflow</h2>
+
+        <p>
+            A typical FFmpeg operation follows a pipeline that reads an input
+            file, processes its media streams, and produces an output file.
+            Depending on the command, FFmpeg may demux, decode, filter,
+            encode, and mux the media.
+        </p>
 
         <div class="diagram">
-            [Input File] -> (Demuxer) -> [Encoded Packets] -> (Decoder) <br>
-            -> [Raw Frames] -> (Filters/Processing) -> [Raw Frames] <br>
-            -> (Encoder) -> [Encoded Packets] -> (Muxer) -> [Output File]
+
+            [Input File]
+            →
+            (Demuxer)
+            →
+            [Encoded Packets]
+            →
+            (Decoder)
+            <br><br>
+
+            →
+            [Raw Frames]
+            →
+            (Filters / Processing)
+            →
+            [Raw Frames]
+            <br><br>
+
+            →
+            (Encoder)
+            →
+            [Encoded Packets]
+            →
+            (Muxer)
+            →
+            [Output File]
+
         </div>
+
+        <p>
+            Not every FFmpeg operation requires every stage. For example,
+            copying an existing stream without re-encoding can avoid the
+            decoding and encoding stages. Subtitle rendering, however,
+            requires video filtering and therefore produces processed video
+            frames.
+        </p>
+
     </section>
 
+
+    <!-- Containers -->
     <section>
-        <h2>The Libav Libraries (The API)</h2>
-        <p>FFmpeg is not just a command-line tool; it is a collection of powerful libraries that you can use in C, C++, Python, or Node.js:</p>
+
+        <h2>Containers, Streams, and Codecs</h2>
+
+        <p>
+            A video file such as an MP4 or MKV file is a container that can
+            hold multiple media streams. These streams can include video,
+            audio, subtitles, metadata, and other information.
+        </p>
+
+        <p>
+            A codec defines how a particular audio or video stream is encoded
+            and decoded. For example, H.264 and H.265 are commonly used video
+            codecs, while AAC is commonly used for audio.
+        </p>
+
+        <p>
+            FFmpeg separates these concepts so that the container format,
+            individual streams, and codecs can be processed independently.
+        </p>
+
+    </section>
+
+
+    <!-- Libraries -->
+    <section>
+
+        <h2>The FFmpeg Libraries</h2>
+
+        <p>
+            FFmpeg is more than a command-line application. Its functionality
+            is provided by several libraries that can also be used by other
+            software projects.
+        </p>
+
 
         <div class="api-grid">
+
             <div class="api-card">
+
                 <strong>libavcodec</strong>
-                <p>The heart of FFmpeg. Contains all the encoders and decoders for audio and video.</p>
+
+                <p>
+                    Provides encoders and decoders for many audio and video
+                    formats.
+                </p>
+
             </div>
+
+
             <div class="api-card">
+
                 <strong>libavformat</strong>
-                <p>Handles "muxing" and "demuxing" (reading and writing container formats like MP4, MKV, AVI).</p>
+
+                <p>
+                    Handles multimedia container formats and provides the
+                    functionality required for muxing and demuxing streams.
+                </p>
+
             </div>
+
+
             <div class="api-card">
+
                 <strong>libavfilter</strong>
-                <p>This is where the magic happens for subtitles, resizing, and color correction.</p>
+
+                <p>
+                    Provides the filtering framework used for operations such
+                    as scaling, color processing, video effects, and subtitle
+                    rendering.
+                </p>
+
             </div>
+
+
             <div class="api-card">
+
                 <strong>libswscale</strong>
-                <p>Performs highly optimized image scaling and colorspace/pixel format conversion operations.</p>
+
+                <p>
+                    Provides image scaling and pixel format conversion
+                    functionality for video processing.
+                </p>
+
             </div>
+
         </div>
+
     </section>
 
+
+    <!-- Filtering -->
     <section>
-        <h2>FFmpeg Filtering (force_style)</h2>
-        <p>When you use the tool on the previous page, you are interacting with <code>libavfilter</code>. The <code>force_style</code> parameter overrides the <strong>ASS (Advanced Substation Alpha)</strong> properties inside the filter chain. FFmpeg parses these strings and applies them to the video frames in real-time during the transcoding process.</p>
+
+        <h2>FFmpeg Filtering</h2>
+
+        <p>
+            FFmpeg filters process multimedia streams as part of the video
+            or audio pipeline. Filters can modify frames, transform their
+            dimensions, change colors, add effects, or render additional
+            information onto the media.
+        </p>
+
+        <p>
+            A filter can be selected with the <code>-vf</code> option when
+            working with video.
+        </p>
+
+        <pre>-vf "scale=1280:720"</pre>
+
+        <p>
+            The example above scales a video to 1280 by 720 pixels.
+            Multiple filters can also be combined into a filter chain.
+        </p>
+
     </section>
 
-    <div style="text-align: center;">
-        <a href="https://ffmpeg.org/documentation.html" target="_blank" class="btn-doc">Visit Official Documentation</a>
-    </div>
-</div>
+
+    <!-- Subtitles -->
+    <section>
+
+        <h2>Rendering Subtitles with FFmpeg</h2>
+
+        <p>
+            FFmpeg can render subtitles onto video using the
+            <code>subtitles</code> video filter.
+        </p>
+
+        <p>
+            A simple example looks like this:
+        </p>
+
+        <pre>ffmpeg -i input.mp4 -vf "subtitles=subtitles.srt" output.mp4</pre>
+
+        <p>
+            In this example, FFmpeg reads the input video, processes the
+            subtitle file through the subtitles filter, renders the subtitles
+            onto the video frames, and writes the processed video to the
+            output file.
+        </p>
+
+    </section>
+
+
+    <!-- force_style -->
+    <section>
+
+        <h2>Understanding force_style</h2>
+
+        <p>
+            The <code>force_style</code> option can be used with the
+            <code>subtitles</code> filter to override selected subtitle
+            style properties during rendering.
+        </p>
+
+        <p>
+            This allows subtitle appearance to be controlled directly from
+            the FFmpeg command instead of requiring the original subtitle
+            file to contain every desired style setting.
+        </p>
+
+        <p>
+            For example, a command can specify properties such as font size,
+            colors, bold or italic text, outline width, shadow, alignment,
+            and vertical margins.
+        </p>
+
+        <pre>ffmpeg -i input.mp4 \
+-vf "subtitles=subtitles.srt:force_style='FontName=Arial,FontSize=22,Bold=1,Alignment=2'" \
+-c:a copy output.mp4</pre>
+
+    </section>
+
+
+    <!-- ASS styling -->
+    <section>
+
+        <h2>ASS Subtitle Styling</h2>
+
+        <p>
+            ASS, or Advanced SubStation Alpha, is a subtitle format that
+            supports detailed styling information. It is commonly used when
+            subtitles require more control over typography and positioning
+            than basic subtitle formats provide.
+        </p>
+
+        <p>
+            FFmpeg's subtitle rendering pipeline can use ASS-style properties
+            such as font name, font size, primary color, outline color,
+            background color, alignment, margins, and other style attributes.
+        </p>
+
+        <p>
+            The exact appearance can depend on the subtitle renderer,
+            available fonts, video dimensions, and the options supplied
+            to FFmpeg.
+        </p>
+
+    </section>
+
+
+    <!-- Style parameters -->
+    <section>
+
+        <h2>Common Subtitle Style Parameters</h2>
+
+
+        <h3>FontName</h3>
+
+        <p>
+            Defines the font family used to render the subtitle text.
+            The selected font must be available to the environment performing
+            the rendering.
+        </p>
+
+
+        <h3>FontSize</h3>
+
+        <p>
+            Controls the size of the subtitle text. The appropriate value
+            depends on the video resolution and the desired visual hierarchy.
+        </p>
+
+
+        <h3>PrimaryColour</h3>
+
+        <p>
+            Defines the primary color of the subtitle text using the color
+            representation expected by ASS-style subtitle rendering.
+        </p>
+
+
+        <h3>OutlineColour</h3>
+
+        <p>
+            Defines the color used for the outline around subtitle characters.
+            An outline can improve readability against complex backgrounds.
+        </p>
+
+
+        <h3>BackColour</h3>
+
+        <p>
+            Defines the background or shadow color used by the subtitle style,
+            depending on the selected border configuration.
+        </p>
+
+
+        <h3>Bold and Italic</h3>
+
+        <p>
+            These properties control whether the subtitle text is rendered
+            using bold or italic styling.
+        </p>
+
+
+        <h3>Outline</h3>
+
+        <p>
+            Controls the size of the subtitle outline. A larger outline can
+            make text more readable when the video background has high visual
+            complexity.
+        </p>
+
+
+        <h3>Shadow</h3>
+
+        <p>
+            Controls the subtitle shadow effect. Shadows can provide additional
+            separation between subtitle text and the video.
+        </p>
+
+
+        <h3>Alignment</h3>
+
+        <p>
+            Determines the general position of the subtitle on the video,
+            including top, middle, and bottom positions.
+        </p>
+
+
+        <h3>MarginV</h3>
+
+        <p>
+            Controls the vertical margin used when positioning subtitles.
+            It is useful for moving subtitles farther from the corresponding
+            edge of the video.
+        </p>
+
+    </section>
+
+
+    <!-- Generator -->
+    <section>
+
+        <h2>Using the Subtitle Style Generator</h2>
+
+        <p>
+            The
+            <a href="index.html">
+                FFmpeg Subtitle Style Generator
+            </a>
+            provides a visual interface for experimenting with these styling
+            parameters.
+        </p>
+
+        <p>
+            Instead of manually editing a long FFmpeg command, you can change
+            the styling options in the browser and immediately see the result
+            in the portrait and landscape previews.
+        </p>
+
+        <p>
+            When the style is ready, the generator creates an FFmpeg command
+            containing the selected parameters.
+        </p>
+
+    </section>
+
+
+    <!-- Generated command -->
+    <section>
+
+        <h2>Understanding the Generated Command</h2>
+
+        <p>
+            A typical generated command has this structure:
+        </p>
+
+        <pre>ffmpeg -i input.mp4 -vf "subtitles='YOUR_SUBS_FILE.srt':force_style='...'" -c:a copy output.mp4</pre>
+
+        <p>
+            Replace <code>input.mp4</code> with the path to your source video
+            and replace <code>YOUR_SUBS_FILE.srt</code> with your subtitle file.
+        </p>
+
+        <p>
+            The <code>-c:a copy</code> option tells FFmpeg to copy the audio
+            stream without re-encoding it, when the selected output format
+            supports the existing audio stream.
+        </p>
+
+    </section>
+
+
+    <!-- Practical example -->
+    <section>
+
+        <h2>Example Subtitle Workflow</h2>
+
+        <p>
+            A typical workflow using the generator is:
+        </p>
+
+        <ol>
+            <li>Open the subtitle style generator.</li>
+            <li>Enter representative subtitle text.</li>
+            <li>Choose the font size and text color.</li>
+            <li>Adjust the background, outline, and shadow.</li>
+            <li>Select the desired subtitle alignment.</li>
+            <li>Preview the result in portrait and landscape formats.</li>
+            <li>Copy the generated FFmpeg command.</li>
+            <li>Replace the example input and subtitle file paths.</li>
+            <li>Run the command with FFmpeg.</li>
+        </ol>
+
+    </section>
+
+
+    <!-- Important notes -->
+    <section>
+
+        <h2>Things to Keep in Mind</h2>
+
+        <p>
+            A browser preview is useful for comparing styles, but the final
+            appearance can vary slightly when the command is executed by
+            FFmpeg. Differences can result from the installed fonts, subtitle
+            renderer, video resolution, pixel format, and other processing
+            settings.
+        </p>
+
+        <p>
+            For production video workflows, always test the generated command
+            with the actual video and subtitle files that you intend to use.
+        </p>
+
+    </section>
+
+
+    <!-- FAQ -->
+    <section>
+
+        <h2>Frequently Asked Questions</h2>
+
+
+        <h3>Is FFmpeg free?</h3>
+
+        <p>
+            FFmpeg is free and open-source software distributed under its
+            applicable open-source licenses.
+        </p>
+
+
+        <h3>What is libavfilter?</h3>
+
+        <p>
+            libavfilter is the FFmpeg library responsible for the framework
+            used to apply audio and video filters during media processing.
+        </p>
+
+
+        <h3>What is force_style?</h3>
+
+        <p>
+            <code>force_style</code> is an option of the subtitles filter
+            that allows selected subtitle style properties to be overridden
+            during rendering.
+        </p>
+
+
+        <h3>Does FFmpeg edit the original video?</h3>
+
+        <p>
+            FFmpeg normally reads the input file and creates a new output file.
+            The original input remains unchanged unless a workflow explicitly
+            replaces or modifies files outside the FFmpeg processing operation.
+        </p>
+
+
+        <h3>Why can subtitle rendering look different on different systems?</h3>
+
+        <p>
+            Font availability, renderer behavior, video resolution, subtitle
+            format, and encoding settings can affect the final appearance.
+        </p>
+
+    </section>
+
+
+    <!-- Official documentation -->
+    <section class="documentation-section">
+
+        <h2>Official FFmpeg Documentation</h2>
+
+        <p>
+            For complete technical details, filter options, command-line
+            documentation, and implementation information, consult the
+            official FFmpeg documentation.
+        </p>
+
+        <div style="text-align: center;">
+
+            <a
+                    href="https://ffmpeg.org/documentation.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn-doc"
+            >
+                Visit Official Documentation →
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- Back to tool -->
+    <section class="documentation-section">
+
+        <h2>Ready to Create a Subtitle Style?</h2>
+
+        <p>
+            Use the generator to experiment with subtitle styling and create
+            an FFmpeg command based on your selected options.
+        </p>
+
+        <div style="text-align: center;">
+
+            <a
+                    href="index.html"
+                    class="btn-doc"
+            >
+                Open Subtitle Style Generator →
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
 
 <footer>
-    &copy; 2025 FFmpeg Subtitle Style Generator Project | Documentation Page
+
+    <p>
+        © 2026 FFmpeg Subtitle Style Generator
+    </p>
+
+    <p>
+        Technical documentation and free subtitle styling tool.
+    </p>
+
 </footer>
 
 </body>
